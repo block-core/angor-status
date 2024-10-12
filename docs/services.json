@@ -1,0 +1,44 @@
+{
+    "website": {
+      "name": "angor.io",
+      "url": "https://angor.io",
+      "type": "website"
+    },
+    "services": [
+      {
+        "name": "hub.angor.io",
+        "url": "https://hub.angor.io",
+        "type": "service"
+      },
+      {
+        "name": "test.angor.io",
+        "url": "https://test.angor.io",
+        "type": "service"
+      },
+      {
+        "name": "beta.angor.io",
+        "url": "https://beta.angor.io",
+        "type": "service"
+      }
+    ],
+    "indexers": [
+      {
+        "name": "tbtc.indexer.angor.io",
+        "url": "https://tbtc.indexer.angor.io/api/stats/heartbeat",
+        "type": "indexer"
+      }
+    ],
+    "relays": [
+      {
+        "name": "wss://relay.angor.io",
+        "url": "wss://relay.angor.io",
+        "type": "relay"
+      },
+      {
+        "name": "wss://relay2.angor.io",
+        "url": "wss://relay2.angor.io",
+        "type": "relay"
+      }
+    ]
+  }
+  

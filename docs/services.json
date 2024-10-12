@@ -42,7 +42,7 @@
     ],
     "repositories": [
       {
-        "name": "Amgor",
+        "name": "Angor",
         "url": "https://github.com/block-core/angor",
         "type": "repository"
       },

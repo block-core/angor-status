@@ -39,6 +39,18 @@
         "url": "wss://relay2.angor.io",
         "type": "relay"
       }
+    ],
+    "repositories": [
+      {
+        "name": "Amgor",
+        "url": "https://github.com/block-core/angor",
+        "type": "repository"
+      },
+      {
+        "name": "Angor hub",
+        "url": "https://github.com/block-core/angor-hub",
+        "type": "repository"
+      }
     ]
   }
   

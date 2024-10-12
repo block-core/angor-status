@@ -7,14 +7,15 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f0f4f8;
+            background-color: #f0f2f5;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             position: relative;
         }
         .container {
             max-width: 900px;
             margin: 0 auto;
+            padding: 20px;
         }
         h1 {
             text-align: center;
@@ -83,18 +84,9 @@
             animation: waves 3s infinite ease-in-out;
             z-index: -1;
         }
-        .wave-1 {
-            animation-delay: 0s;
-        }
-        .wave-2 {
-            animation-delay: 1s;
-        }
-        .wave-3 {
-            animation-delay: 2s;
-        }
         @keyframes waves {
             0% {
-                transform: scale(0.5);
+                transform: scale(0.2);
                 opacity: 1;
             }
             100% {
@@ -133,18 +125,55 @@
             margin-bottom: 20px;
             text-align: center;
         }
-        /* Responsive Design */
-        @media (max-width: 600px) {
-            .service-card {
-                align-items: flex-start;
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        .loading-content {
+            text-align: center;
+        }
+        .loading-content .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #009fb5;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
             }
-            .status-indicator {
-                margin-top: 10px;
+            100% {
+                transform: rotate(360deg);
             }
+        }
+        .loading-content p {
+            font-size: 16px;
+            color: #083b46;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loading-screen">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+        </div>
+    </div>
+
     <!-- Internet status -->
     <div class="internet-status" id="internet-status">        
         <div class="internet-status-text" id="internet-status-text">You are online</div>
@@ -170,28 +199,58 @@
     </div>
 
     <script>
-        // Internet connection check with real-time updates
-        function checkInternetConnection() {
+        // Show loading screen until content is loaded
+        window.addEventListener('load', () => {
+            document.getElementById('loading-screen').style.display = 'none';
+        });
+
+        // Real-time internet status checking
+        // function checkInternetConnection() {
+        //     const statusCircle = document.getElementById('internet-status-circle');
+        //     const statusText = document.getElementById('internet-status-text');
+
+        //     setInterval(() => {
+        //         if (navigator.onLine) {
+        //             statusCircle.style.backgroundColor = 'green';
+        //             statusText.textContent = 'You are online';
+        //         } else {
+        //             statusCircle.style.backgroundColor = 'red';
+        //             statusText.textContent = 'You are offline';
+        //         }
+        //     }, 1000); // Check every second
+        // }
+
+        // More detailed internet check with external API
+        const checkOnlineStatus = async () => {
+            const statusElement = document.getElementById('internet-status-text');
             const statusCircle = document.getElementById('internet-status-circle');
-            const statusText = document.getElementById('internet-status-text');
-            
-            setInterval(() => {
-                if (navigator.onLine) {
+            try {
+                const response = await fetch('https://httpbin.org/get', { method: 'GET', cache: 'no-cache' });
+                if (response.ok) {
+                    statusElement.textContent = 'You are online!';
                     statusCircle.style.backgroundColor = 'green';
-                    statusText.textContent = 'You are online';
                 } else {
-                    statusCircle.style.backgroundColor = 'red';
-                    statusText.textContent = 'You are offline';
+                    throw new Error('Network response was not ok.');
                 }
-            }, 1000); // Check every second
-        }
+            } catch (error) {
+                console.log('Fetch error:', error);
+                statusElement.textContent = 'You are offline!';
+                statusCircle.style.backgroundColor = 'red';
+            }
+        };
 
-        // Handle online/offline events
-        window.addEventListener('online', checkInternetConnection);
-        window.addEventListener('offline', checkInternetConnection);
+        // Check the initial status
+        checkOnlineStatus();
 
-        // Initial Internet connection check
-        checkInternetConnection();
+        // Poll every 30 seconds for more detailed check
+        setInterval(checkOnlineStatus, 10000);
+
+        // Poll every second for basic online/offline check
+        // checkInternetConnection();
+
+        // Add event listeners to update status when online or offline status changes
+        window.addEventListener('online', checkOnlineStatus);
+        window.addEventListener('offline', checkOnlineStatus);
 
         let countdown = 600;
 

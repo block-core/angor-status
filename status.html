@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Status</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .service {
+            margin-bottom: 30px;
+        }
+
+        .service h2 {
+            color: #009fb5;
+            margin-bottom: 10px;
+        }
+
+        .status-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .status-table th, .status-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .status-table th {
+            background-color: #009fb5;
+            color: white;
+        }
+
+        .filter-form {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .filter-form label, .filter-form input {
+            margin-right: 10px;
+        }
+
+        .status-active {
+            color: green;
+        }
+
+        .status-inactive {
+            color: red;
+        }
+
+        .no-data {
+            text-align: center;
+            color: #888;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Service Status</h1>
+
+    <div class="filter-form">
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate">
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate">
+        <button onclick="filterStatus()">Filter</button>
+    </div>
+
+    <div id="servicesStatus"></div>
+</div>
+
+<script>
+    let statusData = [];
+
+    async function loadStatusData() {
+        try {
+            const response = await fetch('status.json');
+            statusData = await response.json();
+            displayStatus();
+        } catch (error) {
+            console.error('Error loading status data:', error);
+        }
+    }
+
+    function displayStatus(startDate = null, endDate = null) {
+        const servicesContainer = document.getElementById('servicesStatus');
+        servicesContainer.innerHTML = '';
+
+        const services = [...new Set(statusData.map(status => status.name))];
+
+        services.forEach(service => {
+            const serviceStatuses = statusData
+                .filter(status => status.name === service)
+                .filter(status => {
+                    const statusDate = new Date(status.timestamp);
+                    return (!startDate || statusDate >= startDate) && (!endDate || statusDate <= endDate);
+                })
+                .slice(-20); 
+
+            if (serviceStatuses.length === 0) {
+                servicesContainer.innerHTML += `<div class="service"><h2>${service}</h2><div class="no-data">No data available for the selected dates.</div></div>`;
+                return;
+            }
+
+            let serviceHtml = `
+                <div class="service">
+                    <h2>${service}</h2>
+                    <table class="status-table">
+                        <thead>
+                            <tr>
+                                <th>URL</th>
+                                <th>Status</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            serviceStatuses.forEach(status => {
+                const statusClass = status.isActive ? 'status-active' : 'status-inactive';
+                const statusText = status.isActive ? 'Active' : 'Inactive';
+
+                serviceHtml += `
+                    <tr>
+                        <td>${status.url}</td>
+                        <td class="${statusClass}">${statusText}</td>
+                        <td>${new Date(status.timestamp).toLocaleString()}</td>
+                    </tr>
+                `;
+            });
+
+            serviceHtml += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            servicesContainer.innerHTML += serviceHtml;
+        });
+    }
+
+    function filterStatus() {
+        const startDateInput = document.getElementById('startDate').value;
+        const endDateInput = document.getElementById('endDate').value;
+
+        const startDate = startDateInput ? new Date(startDateInput) : null;
+        const endDate = endDateInput ? new Date(endDateInput) : null;
+
+        displayStatus(startDate, endDate);
+    }
+
+    // Load status data when the page loads
+    window.onload = loadStatusData;
+</script>
+
+</body>
+</html>

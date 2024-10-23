@@ -19,6 +19,21 @@
         "name": "beta.angor.io",
         "url": "https://beta.angor.io",
         "type": "service"
+      },
+      {
+        "name": "chat.angor.io",
+        "url": "https://chat.angor.io",
+        "type": "service"
+      },
+      {
+        "name": "zapper.angor.io",
+        "url": "https://zapper.angor.io",
+        "type": "service"
+      },
+      {
+        "name": "embed.hub.angor.io",
+        "url": "https://embed.hub.angor.io",
+        "type": "service"
       }
     ],
     "indexers": [

@@ -1,179 +1,398 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Service Status</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Angor Service Status</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #f0f2f5;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      h1 {
+        text-align: center;
+        color: #083b46;
+        margin-bottom: 40px;
+      }
+
+      .logo {
+        display: block;
+        margin: 0 auto;
+        width: 100px;
+      }
+
+      /* Filter Section */
+      .filter-section {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #fff;
+        padding: 20px;
+        margin-bottom: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 1s ease-in-out;
+        gap: 15px;
+      }
+
+      .filter-label {
+        font-size: 1em;
+        color: #083b46;
+        flex: 1;
+        min-width: 100px;
+        text-align: right;
+      }
+
+      .filter-input {
+        padding: 10px;
+        font-size: 1em;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+        flex: 2;
+        min-width: 200px;
+      }
+
+      .filter-input:focus {
+        border-color: #009fb5;
+        box-shadow: 0 0 5px rgba(0, 159, 181, 0.5);
+      }
+
+      .filter-button {
+        background-color: #009fb5;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: background-color 0.3s ease;
+        flex: 1;
+        min-width: 120px;
+        text-align: center;
+      }
+
+      .filter-button:hover {
+        background-color: #007a8e;
+      }
+
+      /* Responsive Design for Filter Section */
+      @media (max-width: 768px) {
+        .filter-section {
+          flex-direction: column;
+          align-items: stretch;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        .filter-input,
+        .filter-button,
+        .filter-label {
+          width: 100%;
+          text-align: left;
+          margin-bottom: 10px;
         }
+      }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+      .category-title {
+        font-size: 1.5em;
+        color: #009fb5;
+        margin-bottom: 10px;
+        border-bottom: 2px solid #009fb5;
+        padding-bottom: 5px;
+        text-align: left;
+        margin-top: 20px;
+      }
 
-        .service {
-            margin-bottom: 30px;
-        }
+      .service-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: white;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+        animation: fadeIn 0.8s ease-in-out;
+        transition: all 0.5s ease;
+      }
 
-        .service h2 {
-            color: #009fb5;
-            margin-bottom: 10px;
-        }
+      .service-info {
+        display: flex;
+        flex-direction: column;
+      }
 
-        .status-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+      .service-name {
+        font-size: 1.2em;
+      }
 
-        .status-table th, .status-table td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: center;
-        }
+      .last-checked {
+        font-size: 0.9em;
+        color: #666;
+      }
 
-        .status-table th {
-            background-color: #009fb5;
-            color: white;
-        }
+      .status-container {
+        display: flex;
+        align-items: center;
+        position: relative;
+      }
 
-        .filter-form {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
+      .status-indicator {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: green;
+        transition: background-color 0.3s ease;
+      }
 
-        .filter-form label, .filter-form input {
-            margin-right: 10px;
-        }
+      .status-indicator.down {
+        background-color: #dc3545;
+      }
 
-        .status-active {
-            color: green;
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
         }
+        to {
+          opacity: 1;
+        }
+      }
 
-        .status-inactive {
-            color: red;
-        }
+      .scroll-container {
+        display: flex;
+        overflow-x: auto;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        white-space: nowrap;
+        transition: all 0.3s ease;
+      }
 
-        .no-data {
-            text-align: center;
-            color: #888;
-            padding: 20px;
+      .scroll-container::-webkit-scrollbar {
+        height: 8px;
+      }
+
+      .scroll-container::-webkit-scrollbar-thumb {
+        background: #009fb5;
+        border-radius: 10px;
+      }
+
+      .status-bar-item {
+        flex-shrink: 0;
+        width: 30px;
+        height: 30px;
+        background-color: #d3d3d3;
+        margin-right: 5px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+      }
+
+      .status-bar-item.active {
+        background-color: #28a745;
+        transform: scale(1.1);
+      }
+
+      .status-bar-item.inactive {
+        background-color: #dc3545;
+      }
+
+      /* Box for detailed status information */
+      .status-details {
+        display: none;
+        background-color: #f9f9f9;
+        border-left: 4px solid #009fb5;
+        padding: 15px;
+        margin-top: 10px;
+        border-radius: 5px;
+        animation: slideIn 0.5s forwards ease;
+        position: relative;
+        max-height: 0;
+        overflow: hidden;
+      }
+
+      /* Show details with smooth height transition */
+      .status-details.show {
+        display: block;
+        max-height: 500px;
+        transition: max-height 0.5s ease;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
         }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes slideOut {
+        from {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        to {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+      }
+
+      .status-details.fade-out {
+        animation: slideOut 0.5s forwards ease;
+        max-height: 0;
+        transition: max-height 0.5s ease;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
+    <div class="container">
+      <img src="angor.png" alt="Angor" class="logo" />
+      <h1>Angor Service Status</h1>
 
-<div class="container">
-    <h1>Service Status</h1>
+      <!-- Filter Section -->
+      <div class="filter-section">
+        <label for="startDate" class="filter-label">Start Date:</label>
+        <input type="date" id="startDate" class="filter-input" />
+        <label for="endDate" class="filter-label">End Date:</label>
+        <input type="date" id="endDate" class="filter-input" />
+        <button class="filter-button" onclick="filterStatus()">Filter</button>
+      </div>
 
-    <div class="filter-form">
-        <label for="startDate">Start Date:</label>
-        <input type="date" id="startDate">
-        <label for="endDate">End Date:</label>
-        <input type="date" id="endDate">
-        <button onclick="filterStatus()">Filter</button>
+      <div id="serviceStatuses"></div>
     </div>
 
-    <div id="servicesStatus"></div>
-</div>
+    <script>
+      let statusData = [];
 
-<script>
-    let statusData = [];
+      // Prevent caching by adding timestamp to the URL
+      function preventCache(url) {
+        const timestamp = new Date().getTime();
+        return `${url}?t=${timestamp}`;
+      }
 
-    async function loadStatusData() {
+      // Load statuses from status.json
+      async function loadStatusData() {
         try {
-            const response = await fetch('status.json');
-            statusData = await response.json();
-            displayStatus();
+          const response = await fetch(preventCache('status.json'));
+          statusData = await response.json();
+          displayStatuses();
         } catch (error) {
-            console.error('Error loading status data:', error);
+          console.error('Error loading status data:', error);
         }
-    }
+      }
 
-    function displayStatus(startDate = null, endDate = null) {
-        const servicesContainer = document.getElementById('servicesStatus');
-        servicesContainer.innerHTML = '';
+      // Display statuses
+      function displayStatuses(startDate = null, endDate = null) {
+        const container = document.getElementById('serviceStatuses');
+        container.innerHTML = '';
 
-        const services = [...new Set(statusData.map(status => status.name))];
+        // Group statuses by service name
+        const services = [...new Set(statusData.map((status) => status.name))];
 
-        services.forEach(service => {
-            const serviceStatuses = statusData
-                .filter(status => status.name === service)
-                .filter(status => {
-                    const statusDate = new Date(status.timestamp);
-                    return (!startDate || statusDate >= startDate) && (!endDate || statusDate <= endDate);
-                })
-                .slice(-20); 
-
-            if (serviceStatuses.length === 0) {
-                servicesContainer.innerHTML += `<div class="service"><h2>${service}</h2><div class="no-data">No data available for the selected dates.</div></div>`;
-                return;
-            }
-
-            let serviceHtml = `
-                <div class="service">
-                    <h2>${service}</h2>
-                    <table class="status-table">
-                        <thead>
-                            <tr>
-                                <th>URL</th>
-                                <th>Status</th>
-                                <th>Timestamp</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-            `;
-
-            serviceStatuses.forEach(status => {
-                const statusClass = status.isActive ? 'status-active' : 'status-inactive';
-                const statusText = status.isActive ? 'Active' : 'Inactive';
-
-                serviceHtml += `
-                    <tr>
-                        <td>${status.url}</td>
-                        <td class="${statusClass}">${statusText}</td>
-                        <td>${new Date(status.timestamp).toLocaleString()}</td>
-                    </tr>
-                `;
+        services.forEach((service) => {
+          const serviceStatuses = statusData
+            .filter((status) => status.name === service)
+            .filter((status) => {
+              const statusDate = new Date(status.timestamp);
+              return (
+                (!startDate || statusDate >= startDate) &&
+                (!endDate || statusDate <= endDate)
+              );
             });
 
-            serviceHtml += `
-                        </tbody>
-                    </table>
-                </div>
-            `;
+          const serviceDiv = document.createElement('div');
+          serviceDiv.classList.add('service-status');
+          serviceDiv.innerHTML = `<h2>${service}</h2>`;
 
-            servicesContainer.innerHTML += serviceHtml;
+          const scrollContainer = document.createElement('div');
+          scrollContainer.classList.add('scroll-container');
+
+          serviceStatuses.forEach((status) => {
+            const statusDiv = document.createElement('div');
+            statusDiv.classList.add(
+              'status-bar-item',
+              status.isActive ? 'active' : 'inactive'
+            );
+
+            // Handle click event to show detailed status
+            statusDiv.addEventListener('click', () => {
+              showDetails(status, serviceDiv);
+            });
+
+            scrollContainer.appendChild(statusDiv);
+          });
+
+          serviceDiv.appendChild(scrollContainer);
+          container.appendChild(serviceDiv);
         });
-    }
+      }
 
-    function filterStatus() {
+      // Show details with animation
+      function showDetails(status, parentElement) {
+        // Check if there's already a details box and remove it
+        const existingDetails = parentElement.querySelector('.status-details');
+        if (existingDetails) {
+          existingDetails.classList.add('fade-out');
+          setTimeout(() => {
+            existingDetails.remove();
+          }, 500);
+        }
+
+        // Create a new details box
+        const detailsBox = document.createElement('div');
+        detailsBox.classList.add('status-details', 'show');
+        detailsBox.innerHTML = `
+          <strong>Service:</strong> ${status.name}<br>
+          <strong>URL:</strong> ${status.url}<br>
+          <strong>Status:</strong> ${
+            status.isActive ? 'Operational' : 'Down'
+          }<br>
+          <strong>Time:</strong> ${new Date(status.timestamp).toLocaleString()}
+        `;
+
+        // Append the details box and animate it
+        parentElement.appendChild(detailsBox);
+
+        // Hide the details after 5 seconds
+        setTimeout(() => {
+          detailsBox.classList.remove('show');
+          setTimeout(() => {
+            detailsBox.remove();
+          }, 500);
+        }, 5000);
+      }
+
+      // Filter status by date
+      function filterStatus() {
         const startDateInput = document.getElementById('startDate').value;
         const endDateInput = document.getElementById('endDate').value;
 
         const startDate = startDateInput ? new Date(startDateInput) : null;
         const endDate = endDateInput ? new Date(endDateInput) : null;
 
-        displayStatus(startDate, endDate);
-    }
+        displayStatuses(startDate, endDate);
+      }
 
-    // Load status data when the page loads
-    window.onload = loadStatusData;
-</script>
+      // Update statuses every one hour
+      setInterval(loadStatusData, 3600000); // 1 hour = 3600000 ms
 
-</body>
+      // Initial load
+      window.onload = () => {
+        loadStatusData();
+      };
+    </script>
+  </body>
 </html>

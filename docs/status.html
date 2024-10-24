@@ -30,27 +30,21 @@
         width: 100px;
       }
 
-      /* Filter Section */
       .filter-section {
         display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
         background-color: #fff;
         padding: 20px;
         margin-bottom: 30px;
         border-radius: 10px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        animation: fadeIn 1s ease-in-out;
         gap: 15px;
       }
 
       .filter-label {
         font-size: 1em;
         color: #083b46;
-        flex: 1;
-        min-width: 100px;
-        text-align: right;
       }
 
       .filter-input {
@@ -59,8 +53,10 @@
         border: 1px solid #ccc;
         border-radius: 5px;
         transition: all 0.3s ease;
-        flex: 2;
-        min-width: 200px;
+        width: 180px;
+        max-width: -webkit-fill-available;
+        max-width: -moz-available;
+        max-width: fill-available;
       }
 
       .filter-input:focus {
@@ -77,16 +73,12 @@
         cursor: pointer;
         font-size: 1em;
         transition: background-color 0.3s ease;
-        flex: 1;
-        min-width: 120px;
-        text-align: center;
       }
 
       .filter-button:hover {
         background-color: #007a8e;
       }
 
-      /* Responsive Design for Filter Section */
       @media (max-width: 768px) {
         .filter-section {
           flex-direction: column;
@@ -112,62 +104,6 @@
         margin-top: 20px;
       }
 
-      .service-card {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        background-color: white;
-        padding: 20px;
-        margin-bottom: 20px;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        position: relative;
-        overflow: hidden;
-        animation: fadeIn 0.8s ease-in-out;
-        transition: all 0.5s ease;
-      }
-
-      .service-info {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .service-name {
-        font-size: 1.2em;
-      }
-
-      .last-checked {
-        font-size: 0.9em;
-        color: #666;
-      }
-
-      .status-container {
-        display: flex;
-        align-items: center;
-        position: relative;
-      }
-
-      .status-indicator {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        background-color: green;
-        transition: background-color 0.3s ease;
-      }
-
-      .status-indicator.down {
-        background-color: #dc3545;
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
-      }
-
       .scroll-container {
         display: flex;
         overflow-x: auto;
@@ -175,7 +111,6 @@
         border: 1px solid #ddd;
         border-radius: 10px;
         white-space: nowrap;
-        transition: all 0.3s ease;
       }
 
       .scroll-container::-webkit-scrollbar {
@@ -207,7 +142,11 @@
         background-color: #dc3545;
       }
 
-      /* Box for detailed status information */
+      /* Style for selected status bar item */
+      .status-bar-item.selected {
+        background-color: #009fb5 !important;
+      }
+
       .status-details {
         display: none;
         background-color: #f9f9f9;
@@ -221,7 +160,6 @@
         overflow: hidden;
       }
 
-      /* Show details with smooth height transition */
       .status-details.show {
         display: block;
         max-height: 500px;
@@ -238,23 +176,6 @@
           transform: translateY(0);
         }
       }
-
-      @keyframes slideOut {
-        from {
-          opacity: 1;
-          transform: translateY(0);
-        }
-        to {
-          opacity: 0;
-          transform: translateY(-10px);
-        }
-      }
-
-      .status-details.fade-out {
-        animation: slideOut 0.5s forwards ease;
-        max-height: 0;
-        transition: max-height 0.5s ease;
-      }
     </style>
   </head>
   <body>
@@ -262,7 +183,6 @@
       <img src="angor.png" alt="Angor" class="logo" />
       <h1>Angor Service Status</h1>
 
-      <!-- Filter Section -->
       <div class="filter-section">
         <label for="startDate" class="filter-label">Start Date:</label>
         <input type="date" id="startDate" class="filter-input" />
@@ -277,29 +197,25 @@
     <script>
       let statusData = [];
 
-      // Prevent caching by adding timestamp to the URL
       function preventCache(url) {
         const timestamp = new Date().getTime();
         return `${url}?t=${timestamp}`;
       }
 
-      // Load statuses from status.json
       async function loadStatusData() {
         try {
-          const response = await fetch(preventCache('status.json'));
+          const response = await fetch(preventCache("status.json"));
           statusData = await response.json();
           displayStatuses();
         } catch (error) {
-          console.error('Error loading status data:', error);
+          console.error("Error loading status data:", error);
         }
       }
 
-      // Display statuses
       function displayStatuses(startDate = null, endDate = null) {
-        const container = document.getElementById('serviceStatuses');
-        container.innerHTML = '';
+        const container = document.getElementById("serviceStatuses");
+        container.innerHTML = "";
 
-        // Group statuses by service name
         const services = [...new Set(statusData.map((status) => status.name))];
 
         services.forEach((service) => {
@@ -313,23 +229,31 @@
               );
             });
 
-          const serviceDiv = document.createElement('div');
-          serviceDiv.classList.add('service-status');
+          const serviceDiv = document.createElement("div");
+          serviceDiv.classList.add("service-status");
           serviceDiv.innerHTML = `<h2>${service}</h2>`;
 
-          const scrollContainer = document.createElement('div');
-          scrollContainer.classList.add('scroll-container');
+          const scrollContainer = document.createElement("div");
+          scrollContainer.classList.add("scroll-container");
 
           serviceStatuses.forEach((status) => {
-            const statusDiv = document.createElement('div');
+            const statusDiv = document.createElement("div");
             statusDiv.classList.add(
-              'status-bar-item',
-              status.isActive ? 'active' : 'inactive'
+              "status-bar-item",
+              status.isActive ? "active" : "inactive"
             );
 
-            // Handle click event to show detailed status
-            statusDiv.addEventListener('click', () => {
+            // Handle click event to show detailed status and change color
+            statusDiv.addEventListener("click", () => {
               showDetails(status, serviceDiv);
+
+              // Change color to match filter button
+              statusDiv.classList.add("selected");
+
+              // Reset color after 5 seconds
+              setTimeout(() => {
+                statusDiv.classList.remove("selected");
+              }, 5000);
             });
 
             scrollContainer.appendChild(statusDiv);
@@ -340,45 +264,39 @@
         });
       }
 
-      // Show details with animation
       function showDetails(status, parentElement) {
-        // Check if there's already a details box and remove it
-        const existingDetails = parentElement.querySelector('.status-details');
+        const existingDetails = parentElement.querySelector(".status-details");
         if (existingDetails) {
-          existingDetails.classList.add('fade-out');
+          existingDetails.classList.add("fade-out");
           setTimeout(() => {
             existingDetails.remove();
           }, 500);
         }
 
-        // Create a new details box
-        const detailsBox = document.createElement('div');
-        detailsBox.classList.add('status-details', 'show');
+        const detailsBox = document.createElement("div");
+        detailsBox.classList.add("status-details", "show");
         detailsBox.innerHTML = `
           <strong>Service:</strong> ${status.name}<br>
           <strong>URL:</strong> ${status.url}<br>
           <strong>Status:</strong> ${
-            status.isActive ? 'Operational' : 'Down'
+            status.isActive ? "Operational" : "Down"
           }<br>
           <strong>Time:</strong> ${new Date(status.timestamp).toLocaleString()}
         `;
 
-        // Append the details box and animate it
         parentElement.appendChild(detailsBox);
 
-        // Hide the details after 5 seconds
         setTimeout(() => {
-          detailsBox.classList.remove('show');
+          detailsBox.classList.remove("show");
           setTimeout(() => {
             detailsBox.remove();
           }, 500);
         }, 5000);
       }
 
-      // Filter status by date
       function filterStatus() {
-        const startDateInput = document.getElementById('startDate').value;
-        const endDateInput = document.getElementById('endDate').value;
+        const startDateInput = document.getElementById("startDate").value;
+        const endDateInput = document.getElementById("endDate").value;
 
         const startDate = startDateInput ? new Date(startDateInput) : null;
         const endDate = endDateInput ? new Date(endDateInput) : null;
@@ -386,10 +304,8 @@
         displayStatuses(startDate, endDate);
       }
 
-      // Update statuses every one hour
-      setInterval(loadStatusData, 3600000); // 1 hour = 3600000 ms
+      setInterval(loadStatusData, 3600000);
 
-      // Initial load
       window.onload = () => {
         loadStatusData();
       };

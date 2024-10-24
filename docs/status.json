@@ -1748,5 +1748,75 @@
     "type": "relay",
     "isActive": true,
     "timestamp": "2024-10-24T18:23:38.4582111Z"
+  },
+  {
+    "name": "angor.io",
+    "url": "https://angor.io",
+    "type": "website",
+    "isActive": true,
+    "timestamp": "2024-10-24T19:13:37.5099115Z"
+  },
+  {
+    "name": "hub.angor.io",
+    "url": "https://hub.angor.io",
+    "type": "service",
+    "isActive": true,
+    "timestamp": "2024-10-24T19:13:37.6818224Z"
+  },
+  {
+    "name": "test.angor.io",
+    "url": "https://test.angor.io",
+    "type": "service",
+    "isActive": true,
+    "timestamp": "2024-10-24T19:13:37.9152933Z"
+  },
+  {
+    "name": "beta.angor.io",
+    "url": "https://beta.angor.io",
+    "type": "service",
+    "isActive": true,
+    "timestamp": "2024-10-24T19:13:38.0638734Z"
+  },
+  {
+    "name": "chat.angor.io",
+    "url": "https://chat.angor.io",
+    "type": "service",
+    "isActive": true,
+    "timestamp": "2024-10-24T19:13:38.2891594Z"
+  },
+  {
+    "name": "zapper.angor.io",
+    "url": "https://zapper.angor.io",
+    "type": "service",
+    "isActive": true,
+    "timestamp": "2024-10-24T19:13:38.4201089Z"
+  },
+  {
+    "name": "embed.hub.angor.io",
+    "url": "https://embed.hub.angor.io",
+    "type": "service",
+    "isActive": true,
+    "timestamp": "2024-10-24T19:13:38.5603346Z"
+  },
+  {
+    "name": "tbtc.indexer.angor.io",
+    "url": "https://tbtc.indexer.angor.io/api/stats/heartbeat",
+    "type": "indexer",
+    "isActive": true,
+    "timestamp": "2024-10-24T19:13:39.1545626Z"
+  },
+  {
+    "name": "wss://relay.angor.io",
+    "url": "wss://relay.angor.io",
+    "type": "relay",
+    "isActive": true,
+    "timestamp": "2024-10-24T19:13:39.7783772Z"
+  },
+  {
+    "name": "wss://relay2.angor.io",
+    "url": "wss://relay2.angor.io",
+    "type": "relay",
+    "isActive": true,
+    "timestamp": "2024-10-24T19:13:40.3035311Z"
   }
 ]

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Angor Service Status</title>
+    <title>Angor Service status</title>
     <style>
       body {
         font-family: "Arial", sans-serif;
@@ -222,7 +222,7 @@
 
     <div class="container">
       <img src="angor.png" alt="Angor" class="logo" />
-      <h1>Angor Service Status</h1>
+      <h1>Angor Service status</h1>
       <div id="countdown">Next check in: 600 seconds</div>
 
       <div class="category-title">Website</div>
@@ -264,7 +264,7 @@
       // }
 
       // More detailed internet check with external API
-      const checkOnlineStatus = async () => {
+      const checkOnlinestatus = async () => {
         const statusElement = document.getElementById("internet-status-text");
         const statusCircle = document.getElementById("internet-status-circle");
         try {
@@ -286,17 +286,17 @@
       };
 
       // Check the initial status
-      checkOnlineStatus();
+      checkOnlinestatus();
 
       // Poll every 30 seconds for more detailed check
-      setInterval(checkOnlineStatus, 10000);
+      setInterval(checkOnlinestatus, 10000);
 
       // Poll every second for basic online/offline check
       // checkInternetConnection();
 
       // Add event listeners to update status when online or offline status changes
-      window.addEventListener("online", checkOnlineStatus);
-      window.addEventListener("offline", checkOnlineStatus);
+      window.addEventListener("online", checkOnlinestatus);
+      window.addEventListener("offline", checkOnlinestatus);
 
       let countdown = 600;
 
@@ -315,7 +315,7 @@
                 statusIndicator.style.backgroundColor = "yellow";
               });
             clearInterval(interval);
-            loadAndCheckStatuses();
+            loadAndCheckstatuses();
             countdown = 600;
             startCountdown(); // restart countdown
           }
@@ -344,7 +344,7 @@
       }
 
       // Update status and time
-      function updateStatus(serviceId, timeId, waveId, isOperational) {
+      function updatestatus(serviceId, timeId, waveId, isOperational) {
         const statusIndicator = document.getElementById(serviceId);
         const timeElement = document.getElementById(timeId);
         const waveElement = document.getElementById(waveId);
@@ -364,18 +364,18 @@
       async function checkService(url, serviceId, timeId, waveId) {
         try {
           const response = await fetch(preventCache(url));
-          updateStatus(serviceId, timeId, waveId, response.ok);
+          updatestatus(serviceId, timeId, waveId, response.ok);
         } catch (error) {
-          updateStatus(serviceId, timeId, waveId, false);
+          updatestatus(serviceId, timeId, waveId, false);
         }
       }
 
       // Check WebSocket relay status
       function checkRelay(url, relayId, timeId, waveId) {
         const ws = new WebSocket(url);
-        ws.onopen = () => updateStatus(relayId, timeId, waveId, true);
-        ws.onerror = () => updateStatus(relayId, timeId, waveId, false);
-        ws.onclose = () => updateStatus(relayId, timeId, waveId, false);
+        ws.onopen = () => updatestatus(relayId, timeId, waveId, true);
+        ws.onerror = () => updatestatus(relayId, timeId, waveId, false);
+        ws.onclose = () => updatestatus(relayId, timeId, waveId, false);
       }
       // Fetch GitHub repository details
       async function fetchGitHubRepoDetails(repoUrl) {
@@ -430,7 +430,7 @@
         return data.length;
       }
       // Load and check statuses from JSON
-      async function loadAndCheckStatuses() {
+      async function loadAndCheckstatuses() {
         const websiteContainer = document.getElementById("website-container");
         const servicesContainer = document.getElementById("services-container");
         const indexersContainer = document.getElementById("indexers-container");
@@ -539,7 +539,7 @@
         }
       }
       // Initial load and start countdown
-      loadAndCheckStatuses();
+      loadAndCheckstatuses();
       loadAndCheckRepos();
       startCountdown();
     </script>

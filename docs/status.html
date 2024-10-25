@@ -163,7 +163,7 @@
         try {
           const response = await fetch(preventCache("https://block-core.github.io/status/status.json"));
           const data = await response.json();
-          statusData = data["Blockcore"] || []; 
+          statusData = data["Angor"] || []; 
           displayStatuses();
         } catch (error) {
           console.error("Error loading status data:", error);
